@@ -68,7 +68,7 @@ int main{
 		else if(input=="DELETE"){dl();}
 		else if(inpnut=="PRINT"){print();}
 		else if(input=="QUIT"){listing = false;}
-		else{cout<<Invalid input, please try again."<<endl;}
+		else{cout<<"Invalid input, please try again."<<endl;}
 	}
 	return 0;
 }
