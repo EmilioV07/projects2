@@ -7,19 +7,37 @@
 #include"lastnames.txt"
 using namespace std;
 struct student{string name;int id;double gpa;, student* next, student* prev}//ADD DESTRUCTOR
-void print(){//prints all students
+void print(student** &table){//prints all students
 	//iterate through headlist
 		//iterate through chains and print items
 }
-void dl(int target){//deletes one student
+void dl(student** &table){//deletes one student
 	int _target;
 	cout<<"You are deleting a student"<<endl;
 	cout<<"ID of student-to-delete: "
-	getline(cin, _target);//EDIT DATA TO DELETE BY?
+	getline(cin, _target);
 	cout<<endl;
-	dl(_target);
+	//DELETE THE TARGET
 }
-void add(&idcount,&table){//adds one student, INCLUDES HASH FUNCTION, HASH FROM STUDENT ID
+bool rehash(student** &table){//automatically (when called) re-spreads the items into a new hash table
+	bool rhtf;
+	student** newtable = new student*[2*(sizeof(table)/sizeof(table[0]))];//assigns 'global' table variable to new table of double size
+	for(int i=0;i<(sizeof(newtable)/sizeof(newtable[0]));i++){student* h=nullptr;newtable[i]=h;}//fills table with empty head pointers
+	for(student* item ; table){
+		if(item!=nullptr){
+			int index;
+			student* temp = newtable[0];
+			for(char i ; item->_name){index += (static_cast<int>(i) + 47) * 109;}//HASH TIME UNDO BY /109, -47
+				if(newtable[index]==nullptr){newtable[index]=item;}//IF NEWTABLE INDEX EMPTY, MOVE STUDENT
+				
+				//COPY FROM ADD
+		}
+		
+	}
+	table = newtable;
+	return rhtf;//RETURNS WHETHER OR NOT ANOTHER REHASH IS NEEDED
+}
+void add(int &idcount,student** &table){//adds one student, INCLUDES HASH FUNCTION, HASH FROM STUDENT ID
 	string _name;
 	double _gpa;
 	cout<<"You are adding a student"<<endl;
@@ -31,12 +49,19 @@ void add(&idcount,&table){//adds one student, INCLUDES HASH FUNCTION, HASH FROM 
 	student* s = new student(_name,_id,_gpaint, nullptr, nullptr);//change linked list directions
 	student* h=s;
 	int index;
-	for(char i ; _name)(index += (static_cast<int>(i) + 47) * 109;)//HASH TIME UNDO BY /109, -47
+	for(char i ; _name){index += (static_cast<int>(i) + 47) * 109;}//HASH TIME UNDO BY /109, -47
 	index %= (sizeof(table)/sizeof(table[0]));
-	if(table[index]==nullptr){table[index] = s;}//ADD CONDITIONAL FOR OCCUPIED SLOTS
-	else{;}//ITERATE TO LAST ELEMENT AND KEEP TRACK OF LENGTH TO DETERMINE REHASH
+	else{
+		int chainlen = 0;
+		student* temp = table[index];
+		while(searching){
+			if(temp==nullptr){temp = s;chainlen++;}//IF NO ENTRIES, ADD
+			else if(temp!=nullptr){temp=temp->next;chainlen++;}//increment if not end
+			if(chainlen==4){cout<<"Chain Overflow, rehashing..."<<endl;rehash(&table);}//CONDITIONAL TO REHASH
+		}
+	}//ITERATE TO LAST ELEMENT AND KEEP TRACK OF LENGTH TO DETERMINE REHASH
 }
-void gen(&idcount,&firstnames,&lastnames){//generates x number of students
+void gen(int &idcount,string &firstnames,string &lastnames,student** &table){//generates x number of students
 	string numstr;
 	int num;
 	cout<<"You are generating any number of students randomly"<<endl;
@@ -61,9 +86,6 @@ void gen(&idcount,&firstnames,&lastnames){//generates x number of students
 		add(_name,_id,_gpa);//adds the randomly generated student REPLACE
 	}
 }
-void rehash(){//automatically (when called) re-spreads the items into a new hash table
-	//excerpt from add()
-}
 int main{
 	string line;//variable initializations, first and lastname vectors, run contidion, id count, table.
 	ifstream file1("firstnames");vector<string> firstnames;//file1 and corresponding vector
@@ -75,15 +97,15 @@ int main{
 	int idcount = 111111;
 	//int primecount = 0;
 	//int primes[] = {101,211,431,863,1733,3467};
-	student* new table[101];//actual hash table
+	student** table = new student*[101];//actual hash table
 	for(int i=0;i<100;i++){student* h=nullptr;table[i]=h;}//fills table with empty head pointers
 	while(listing){//main loop
 		cout<<"Enter a command (GENERATE, ADD, DELETE, PRINT, QUIT): "<<endl;
 		getline(cin, input);
 		if(input=="ADD"){add(&idcount,&table);}
 		else if(input=="GENERATE"){gen(&idcount,&firstnames,&lastnames);}
-		else if(input=="DELETE"){dl();}
-		else if(inpnut=="PRINT"){print();}
+		else if(input=="DELETE"){dl(&table);}
+		else if(inpnut=="PRINT"){print(&table);}
 		else if(input=="QUIT"){listing = false;}
 		else{cout<<"Invalid input, please try again."<<endl;}
 	}
