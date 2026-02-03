@@ -19,8 +19,22 @@ void dl(int target){//deletes one student
 	cout<<endl;
 	dl(_target);
 }
-void add(string name, int id, double gpa){//adds one student, INCLUDES HASH FUNCTION, HASH FROM STUDENT ID
-	student s* = new student(_name,_id,_gpa, nullptr, nullptr);//change linked list directions
+void add(&idcount,&table){//adds one student, INCLUDES HASH FUNCTION, HASH FROM STUDENT ID
+	string _name;
+	double _gpa;
+	cout<<"You are adding a student"<<endl;
+	cout<<"Name(First Last): ";
+	getline(cin,_name); cout<<endl;
+	cout<<"GPA: ";
+	getline(cin,_gpa); cout<<endl;
+	double _gpaint=stod(_gpa);
+	student* s = new student(_name,_id,_gpaint, nullptr, nullptr);//change linked list directions
+	student* h=s;
+	int index;
+	for(char i ; _name)(index += (static_cast<int>(i) + 47) * 109;)//HASH TIME UNDO BY /109, -47
+	index %= (sizeof(table)/sizeof(table[0]));
+	if(table[index]==nullptr){table[index] = s;}//ADD CONDITIONAL FOR OCCUPIED SLOTS
+	else{;}//ITERATE TO LAST ELEMENT AND KEEP TRACK OF LENGTH TO DETERMINE REHASH
 }
 void gen(&idcount,&firstnames,&lastnames){//generates x number of students
 	string numstr;
@@ -44,7 +58,7 @@ void gen(&idcount,&firstnames,&lastnames){//generates x number of students
 		string randomfirst = firstnames[namedist(gen)];
 		string randomlast = lastnames[namedist(gen)];
 		_name = randomfirst+" "+randomlast;//assign name
-		add(_name,_id,_gpa);//adds the randomly generated student
+		add(_name,_id,_gpa);//adds the randomly generated student REPLACE
 	}
 }
 void rehash(){//automatically (when called) re-spreads the items into a new hash table
@@ -59,11 +73,14 @@ int main{
 	string input;
 	bool listing = true;
 	int idcount = 111111;
-	student* table[101];//actual hash table
+	//int primecount = 0;
+	//int primes[] = {101,211,431,863,1733,3467};
+	student* new table[101];//actual hash table
+	for(int i=0;i<100;i++){student* h=nullptr;table[i]=h;}//fills table with empty head pointers
 	while(listing){//main loop
 		cout<<"Enter a command (GENERATE, ADD, DELETE, PRINT, QUIT): "<<endl;
 		getline(cin, input);
-		if(input=="ADD"){add();}
+		if(input=="ADD"){add(&idcount,&table);}
 		else if(input=="GENERATE"){gen(&idcount,&firstnames,&lastnames);}
 		else if(input=="DELETE"){dl();}
 		else if(inpnut=="PRINT"){print();}
