@@ -21,20 +21,40 @@ void dl(student** &table){//deletes one student
 }
 bool rehash(student** &table){//automatically (when called) re-spreads the items into a new hash table
 	bool rhtf;
+	
 	student** newtable = new student*[2*(sizeof(table)/sizeof(table[0]))];//assigns 'global' table variable to new table of double size
 	for(int i=0;i<(sizeof(newtable)/sizeof(newtable[0]));i++){student* h=nullptr;newtable[i]=h;}//fills table with empty head pointers
-	for(student* item ; table){
-		if(item!=nullptr){
+	
+	for(student* item ; table){//FOR EVERY OLD STUDENT
+		if(item==nullptr){continue;}//IF THERE IS NO STUDENT
+		if(item!=nullptr){//IF THERE IS A STUDENT
 			int index;
-			student* temp = newtable[0];
-			for(char i ; item->_name){index += (static_cast<int>(i) + 47) * 109;}//HASH TIME UNDO BY /109, -47
-				if(newtable[index]==nullptr){newtable[index]=item;}//IF NEWTABLE INDEX EMPTY, MOVE STUDENT
-				
-				//COPY FROM ADD
+			int chainlen = 1;
+			bool placing;
+			student* oldtemp = item;
+			for(char i ; oldtemp->_name){index += (static_cast<int>(i) + 47) * 109;
+			index %= (sizeof(newtable)/sizeof(newtable[0]))
+			student* newtemp = newtable[index];
+			while(placing)
+				if(newtemp==nullptr){//IF SPOT UNOCCUPIED
+				newtemp=oldtemp;
+				oldtemp=oldtemp->next;
+				newtemp->next=nullptr;
+				}
+				else if(newtemp!=nullptr && newtemp->next==nullptr){//IF SPOT OCCUPIED & NEXT UNOCCUPIED
+				newtemp->next=oldtemp;
+				oldtemp=oldtemp->next;
+				newtemp->next->next=nullptr;
+				}
+				else if(newtemp!=nullptr && newtemp->next!=nullptr){//IF SPOT OCCUPIED & NEXT IS OCCUPIED
+				newtemp=newtemp->next;
+				chainlen++;
+				}
+				if(chainlen==4){cout<<"Another Chain Overflow Has Ocurred, Rehash will loop until resolved."<<endl;rhtf=true;}//MOVE/REHASH, THEN INCREMENT TEMP
 		}
-		
 	}
-	table = newtable;
+	table = newtable;//Finally reassign the 'global' table to the new table
+	//DELETE THE OLD TABLE SOMEHOW
 	return rhtf;//RETURNS WHETHER OR NOT ANOTHER REHASH IS NEEDED
 }
 void add(int &idcount,student** &table){//adds one student, INCLUDES HASH FUNCTION, HASH FROM STUDENT ID
@@ -52,12 +72,17 @@ void add(int &idcount,student** &table){//adds one student, INCLUDES HASH FUNCTI
 	for(char i ; _name){index += (static_cast<int>(i) + 47) * 109;}//HASH TIME UNDO BY /109, -47
 	index %= (sizeof(table)/sizeof(table[0]));
 	else{
-		int chainlen = 0;
+		int chainlen = 1;
 		student* temp = table[index];
 		while(searching){
-			if(temp==nullptr){temp = s;chainlen++;}//IF NO ENTRIES, ADD
-			else if(temp!=nullptr){temp=temp->next;chainlen++;}//increment if not end
-			if(chainlen==4){cout<<"Chain Overflow, rehashing..."<<endl;rehash(&table);}//CONDITIONAL TO REHASH
+			if(temp==nullptr){temp = s; chainlen++;}
+			else if(temp!=nullptr && temp->next==nullptr){temp->next = s;s->prev=temp;chainlen++;}//IF NO ENTRIES, ADD
+			else if(temp!=nullptr && temp->next!=nullptr){temp=temp->next;chainlen++;}//increment if not end
+			if(chainlen==4){
+				bool rehashing;
+				cout<<"Chain Overflow, rehashing..."<<endl;
+				while(rehashing){if(rehash(&table)==true){continue;}else if(rehash(&table)==false){cout<<"Rehashed"<<endl;rehashing=false;searching=false;}
+			}//CONDITIONAL TO REHASH
 		}
 	}//ITERATE TO LAST ELEMENT AND KEEP TRACK OF LENGTH TO DETERMINE REHASH
 }
