@@ -32,23 +32,23 @@ bool rehash(student** &table){//automatically (when called) re-spreads the items
 			int chainlen = 1;
 			bool placing;
 			student* oldtemp = item;
+			student* newtemp = newtable[index];
 			for(char i ; oldtemp->_name){index += (static_cast<int>(i) + 47) * 109;
 			index %= (sizeof(newtable)/sizeof(newtable[0]))
-			student* newtemp = newtable[index];
 			while(placing)
 				if(newtemp==nullptr){//IF SPOT UNOCCUPIED
-				newtemp=oldtemp;
-				oldtemp=oldtemp->next;
-				newtemp->next=nullptr;
+					newtemp=oldtemp;//place
+					oldtemp=oldtemp->next;//iterate
+					newtemp->next=nullptr;//patch
 				}
 				else if(newtemp!=nullptr && newtemp->next==nullptr){//IF SPOT OCCUPIED & NEXT UNOCCUPIED
-				newtemp->next=oldtemp;
-				oldtemp=oldtemp->next;
-				newtemp->next->next=nullptr;
+					newtemp->next=oldtemp;//place
+					oldtemp=oldtemp->next;//iterate
+					newtemp->next->next=nullptr;//patch
 				}
 				else if(newtemp!=nullptr && newtemp->next!=nullptr){//IF SPOT OCCUPIED & NEXT IS OCCUPIED
-				newtemp=newtemp->next;
-				chainlen++;
+					newtemp=newtemp->next;//iterate
+					chainlen++;
 				}
 				if(chainlen==4){cout<<"Another Chain Overflow Has Ocurred, Rehash will loop until resolved."<<endl;rhtf=true;}//MOVE/REHASH, THEN INCREMENT TEMP
 		}
