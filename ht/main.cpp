@@ -35,12 +35,13 @@ void dl(student** &table, int &tablesize){//deletes one student
 		student* prev = nullptr;
 		while(curr!=nullptr){
 			if(curr->id==_target){
-				if(prev!=nullptr&&curr->next!=nullptr){prev->next=curr->next;delete curr;}
-				else if(curr->next!=nullptr&&prev==nullptr){table[i]=curr->next;delete curr;}
-				else if(prev!=nullptr){prev->next=nullptr;delete curr;}
+				if(prev==nullptr){table[i]=curr->next;delete curr;curr=table[i];}//head deletion
+				else{prev->next=curr->next;delete curr;curr=prev->next;}//stitching
 			}
-			prev = curr;
-			curr =  curr->next;
+			else{
+				prev = curr;
+				curr =  curr->next;
+			}
 		}
 	}
 }
