@@ -11,11 +11,16 @@ struct student{
 	student* next;
 	student();
 	student(string n, int i, double g, student* nx=nullptr)
-		: name(n), id(i), gpa(g), next(nx), {}
+		: name(n), id(i), gpa(g), next(nx) {}
 	};
 void print(student** &table, int &tablesize){//prints all students
-	//iterate through headlist
-		//iterate through chains and print items
+	for(int i=0;i<tablesize;i++){
+		student* curr = table[i];
+		while(curr!=nullptr){
+			cout<<"Name: "<<curr->name<<" ID: "<<curr->id<<" GPA: "<<curr->gpa<<endl;
+			curr =  curr->next;
+		}
+	}
 }
 void dl(student** &table, int &tablesize){//deletes one student
 	int _target;
@@ -25,7 +30,19 @@ void dl(student** &table, int &tablesize){//deletes one student
 	getline(cin, _targetstr);
 	_target=stoi(_targetstr);
 	cout<<endl;
-	//DELETE THE TARGET
+	for(int i=0;i<tablesize;i++){
+		student* curr = table[i];
+		student* prev = nullptr;
+		while(curr!=nullptr){
+			if(curr->id==_target){
+				if(prev!=nullptr&&curr->next!=nullptr){prev->next=curr->next;delete curr;}
+				else if(curr->next!=nullptr&&prev==nullptr){table[i]=curr->next;delete curr;}
+				else if(prev!=nullptr){prev->next=nullptr;delete curr;}
+			}
+			prev = curr;
+			curr =  curr->next;
+		}
+	}
 }
 bool rehash(student** &table, int &tablesize){//automatically (when called) re-spreads the items into a new hash table
 	bool rhtf=false;
@@ -69,7 +86,7 @@ void add(int &idcount,student** &table, int &tablesize){//adds one student, INCL
 	cout<<"GPA: ";
 	getline(cin,_gpa); cout<<endl;
 	_gpad=stod(_gpa);
-	student* s = new student(_name,idcount++,_gpad, nullptr, nullptr);//change linked list directions
+	student* s = new student(_name,idcount++,_gpad, nullptr);//change linked list directions
 	int index = 0;
 	for(char i : _name){index += (static_cast<int>(i) + 47) * 109;}//HASH TIME UNDO BY /109, -47
 	index %= tablesize;
@@ -88,7 +105,7 @@ void add(int &idcount,student** &table, int &tablesize){//adds one student, INCL
 			}
 	}
 }
-
+/*
 void gen(int &idcount,vector<string> &firstnames,vector<string> &lastnames,student** &table,int &tablesize){//generates x number of students
 	string numstr;
 	int num;
@@ -102,7 +119,7 @@ void gen(int &idcount,vector<string> &firstnames,vector<string> &lastnames,stude
 		double _gpa;
 		cout<<"How many students would you like to generate?"<<endl;
 		cout<<"You are adding a student"<<endl;
-		_id = idcount; idcount++;//assign id
+		//_id = idcount; idcount++;//assign id
 		random_device rd;//Copilot random device syntax
 		mt19937 gen(rd());//random generator
 		uniform_real_distribution<double> gpadist(0.00,4.5);
@@ -111,6 +128,7 @@ void gen(int &idcount,vector<string> &firstnames,vector<string> &lastnames,stude
 		string randomfirst = firstnames[namedist(gen)];
 		string randomlast = lastnames[namedist(gen)];
 		_name = randomfirst+" "+randomlast;//assign name
+		student* s = new student(_name,idcount++,_gpa, nullptr);//change linked list directions
 		int index;
 		for(char i : _name){index += (static_cast<int>(i) + 47) * 109;}//HASH TIME UNDO BY /109, -47
 		index %= tablesize;
@@ -128,6 +146,7 @@ void gen(int &idcount,vector<string> &firstnames,vector<string> &lastnames,stude
 		}
 	}
 }
+*/
 int main(){
 	string line;//variable initializations, first and lastname vectors, run contidion, id count, table.
 	ifstream file1("firstnames");vector<string> firstnames;//file1 and corresponding vector
@@ -137,14 +156,14 @@ int main(){
 	string input;
 	bool listing=true;
 	int idcount = 111111;
-	tablesize = 101;
+	int tablesize = 101;
 	student** table = new student*[tablesize];//actual hash table
 	for(int i=0;i<101;i++){student* h=nullptr;table[i]=h;}//fills table with empty head pointers
 	while(listing){//main loop
 		cout<<"Enter a command (GENERATE, ADD, DELETE, PRINT, QUIT): "<<endl;
 		getline(cin, input);
 		if(input=="ADD"){add(idcount,table,tablesize);}
-		else if(input=="GENERATE"){gen(idcount,firstnames,lastnames,tablesize);}
+		//else if(input=="GENERATE"){gen(idcount,firstnames,lastnames,tablesize);}
 		else if(input=="DELETE"){dl(table,tablesize);}
 		else if(input=="PRINT"){print(table,tablesize);}
 		else if(input=="QUIT"){listing = false;}
