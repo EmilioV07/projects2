@@ -45,7 +45,7 @@ void dl(student** &table, int &tablesize){//deletes one student
 		}
 	}
 }
-bool rehash(student** &table, int &tablesize){//automatically (when called) re-spreads the items into a new hash table
+bool rehash(student** &table, int &tablesize, int &idcount){//automatically (when called) re-spreads the items into a new hash table
 	bool rhtf=false;
 	int newsize = 2*tablesize;
 	student** newtable = new student*[newsize];//assigns 'global' table variable to new table of double size
@@ -58,7 +58,9 @@ bool rehash(student** &table, int &tablesize){//automatically (when called) re-s
 			curr->next=nullptr;//clears direction of plucked student
 
 			int index = 0;
-			for(char c : curr->name){index += (static_cast<int>(c) + 47) * 109;}
+			for(char c : curr->name){index += static_cast<int>(c);}
+			index+=idcount;
+			index*=109;
 			index %= newsize;
 			if(newtable[index]==nullptr){newtable[index]=curr;}
 			else{
@@ -89,7 +91,9 @@ void add(int &idcount,student** &table, int &tablesize){//adds one student, INCL
 	_gpad=stod(_gpa);
 	student* s = new student(_name,idcount++,_gpad, nullptr);//change linked list directions
 	int index = 0;
-	for(char i : _name){index += (static_cast<int>(i) + 47) * 109;}//HASH TIME UNDO BY /109, -47
+	for(char c : _name){index += static_cast<int>(c);}
+	index+=idcount;
+	index*=109;
 	index %= tablesize;
 	int chainlen = 1;
 	if(table[index]==nullptr){table[index]=s;}
@@ -98,8 +102,7 @@ void add(int &idcount,student** &table, int &tablesize){//adds one student, INCL
 		while(temp->next!=nullptr){temp=temp->next;chainlen++;}//iterate to end of chain
 			temp->next=s;
 			if(chainlen + 1 >=4){
-				cout<<"Chain Overflow, rehashing..."<<endl;
-				while(rehash(table,tablesize)){//rehashes until rehash returns false
+				while(rehash(table,tablesize,idcount)){//rehashes until rehash returns false
 					cout<<"Chain Overflow; Rehashing..."<<endl;
 				}
 				cout<<"Rehashed"<<endl;
@@ -159,7 +162,7 @@ int main(){
 	int idcount = 111111;
 	int tablesize = 101;
 	student** table = new student*[tablesize];//actual hash table
-	for(int i=0;i<101;i++){student* h=nullptr;table[i]=h;}//fills table with empty head pointers
+	for(int i=0;i<tablesize;i++){table[i]=nullptr;}
 	while(listing){//main loop
 		cout<<"Enter a command (GENERATE, ADD, DELETE, PRINT, QUIT): "<<endl;
 		getline(cin, input);
