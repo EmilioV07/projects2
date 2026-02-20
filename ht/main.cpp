@@ -66,7 +66,7 @@ bool rehash(student** &table, int &tablesize){//automatically (when called) re-s
 				int chainlen=1;
 				while(temp->next!=nullptr){temp=temp->next;chainlen++;}//iterate to end of chain
 				temp->next=curr;
-				if(chainlen>=4){rhtf=true;}
+				if(chainlen+1>=4){rhtf=true;}
 			}
 			curr=next;
 		}
@@ -97,7 +97,7 @@ void add(int &idcount,student** &table, int &tablesize){//adds one student, INCL
 		student* temp = table[index];
 		while(temp->next!=nullptr){temp=temp->next;chainlen++;}//iterate to end of chain
 			temp->next=s;
-			if(chainlen>=4){
+			if(chainlen + 1 >=4){
 				cout<<"Chain Overflow, rehashing..."<<endl;
 				while(rehash(table,tablesize)){//rehashes until rehash returns false
 					cout<<"Chain Overflow; Rehashing..."<<endl;
