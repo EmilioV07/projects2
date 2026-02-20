@@ -59,7 +59,7 @@ bool rehash(student** &table, int &tablesize, int &idcount){//automatically (whe
 
 			int index = 0;
 			for(char c : curr->name){index += static_cast<int>(c);}
-			index+=idcount;
+			index+=curr->id;
 			index*=109;
 			index %= newsize;
 			if(newtable[index]==nullptr){newtable[index]=curr;}
@@ -109,11 +109,10 @@ void add(int &idcount,student** &table, int &tablesize){//adds one student, INCL
 			}
 	}
 }
-/*
+
 void gen(int &idcount,vector<string> &firstnames,vector<string> &lastnames,student** &table,int &tablesize){//generates x number of students
 	string numstr;
-	int num;
-	cout<<"You are generating any number of students randomly"<<endl;
+	int num=0;
 	cout<<"How many students would you like to generate: ";
 	getline(cin,numstr);//POTENTIAL ADD DEBUG FOR NON INT INPUTS
 	num = stoi(numstr);//converts string console input into integer for looping
@@ -121,9 +120,6 @@ void gen(int &idcount,vector<string> &firstnames,vector<string> &lastnames,stude
 		string _name;
 		int _id;
 		double _gpa;
-		cout<<"How many students would you like to generate?"<<endl;
-		cout<<"You are adding a student"<<endl;
-		//_id = idcount; idcount++;//assign id
 		random_device rd;//Copilot random device syntax
 		mt19937 gen(rd());//random generator
 		uniform_real_distribution<double> gpadist(0.00,4.5);
@@ -133,30 +129,36 @@ void gen(int &idcount,vector<string> &firstnames,vector<string> &lastnames,stude
 		string randomlast = lastnames[namedist(gen)];
 		_name = randomfirst+" "+randomlast;//assign name
 		student* s = new student(_name,idcount++,_gpa, nullptr);//change linked list directions
-		int index;
-		for(char i : _name){index += (static_cast<int>(i) + 47) * 109;}//HASH TIME UNDO BY /109, -47
+		int index = 0;
+		for(char c : _name){index += static_cast<int>(c);}
+		index+=s->id;
+		index*=109;
 		index %= tablesize;
 		int chainlen = 1;
-		student* temp = table[index];
-		while(searching){
-			if(temp==nullptr){temp = s; chainlen++;}
-			else if(temp!=nullptr && temp->next==nullptr){temp->next = s;chainlen++;}//IF NO ENTRIES, ADD
-			else if(temp!=nullptr && temp->next!=nullptr){temp=temp->next;chainlen++;}//increment if not end
-			if(chainlen==4){
-				bool rehashing;
-				cout<<"Chain Overflow, rehashing..."<<endl;
-				while(rehashing){if(rehash(&table)==true){continue;}else if(rehash(&table)==false){cout<<"Rehashed"<<endl;rehashing=false;searching=false;}
-			}//CONDITIONAL TO REHASH
+		if(table[index]==nullptr){table[index]=s;}
+		else{
+			student* temp = table[index];
+			while(temp->next!=nullptr){temp=temp->next;chainlen++;}//iterate to end of chain
+				temp->next=s;
+				if(chainlen + 1 >=4){
+					while(rehash(table,tablesize,idcount)){//rehashes until rehash returns false
+						cout<<"Chain Overflow; Rehashing..."<<endl;
+					}
+					cout<<"Rehashed"<<endl;
+				}
+			}
 		}
-	}
 }
-*/
+
 int main(){
 	string line;//variable initializations, first and lastname vectors, run contidion, id count, table.
-	ifstream file1("firstnames");vector<string> firstnames;//file1 and corresponding vector
+	ifstream file1("firstnames.txt");vector<string> firstnames;//file1 and corresponding vector
 	while(getline(file1, line)){firstnames.push_back(line);}
-	ifstream file2("lastnames");vector<string> lastnames;//file2 and corresponding vector
+	ifstream file2("lastnames.txt");vector<string> lastnames;//file2 and corresponding vector
 	while(getline(file2, line)){lastnames.push_back(line);}
+	cout << "Loaded " << firstnames.size() << " first names\n";
+	cout << "Loaded " << lastnames.size() << " last names\n";
+
 	string input;
 	bool listing=true;
 	int idcount = 111111;
@@ -167,11 +169,23 @@ int main(){
 		cout<<"Enter a command (GENERATE, ADD, DELETE, PRINT, QUIT): "<<endl;
 		getline(cin, input);
 		if(input=="ADD"){add(idcount,table,tablesize);}
-		//else if(input=="GENERATE"){gen(idcount,firstnames,lastnames,tablesize);}
+		else if(input=="GENERATE"){gen(idcount,firstnames,lastnames,table,tablesize);}
 		else if(input=="DELETE"){dl(table,tablesize);}
 		else if(input=="PRINT"){print(table,tablesize);}
-		else if(input=="QUIT"){listing = false;}
+		else if(input=="QUIT"){
+			for(int i=0;i<tablesize;i++){
+				student* curr = table[i];
+				while(curr!=nullptr){
+					student* prevcurr = curr;
+					curr =  curr->next;
+					cout<<"Deleted: "<<prevcurr->name<<endl;
+					delete curr;
+		}
+	}
+			listing = false;
+		}
 		else{cout<<"Invalid input, please try again."<<endl;}
 	}
+	
 	return 0;
 }
