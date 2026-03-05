@@ -19,9 +19,18 @@ void balanceup(int tree[], int &size, int currentindex){//SEGFAULT BEGINS HERE
 	if(currentindex % 2 == 0){parentindex = (currentindex-2)/2;}//index even
 	else{parentindex = (currentindex-1)/2;}//else index odd
 	int temp = 0;
+<<<<<<< HEAD
 	if(tree[parentindex]<tree[currentindex]){temp = tree[parentindex];tree[parentindex]=tree[currentindex];tree[currentindex]=temp;}
 	else{return;}
 	balanceup(tree, size, parentindex);
+=======
+	if(tree[parent]<tree[index]){
+		temp = tree[parent];
+		tree[parent]=tree[index];
+		tree[index]=temp;
+		balanceup(tree, )
+	}
+>>>>>>> 991c105 (LT3/5 TB OVERWRITTEN)
 }
 void add(int tree[], string filename, int &size){//add function for file input
 	return;
