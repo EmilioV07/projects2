@@ -4,44 +4,45 @@
 #include<array>
 using namespace std;
 void print(int tree[], int size){
+	cout<<"Size: "<<size<<endl;
 	for(int i=0;i<size;i++){
 		cout<<tree[i]<<" ";
 	}
 	cout<<endl;
 }
 
-void balancedown(int tree[], int &size, int head){
-	int big = head;
-	int l = 2*head +1;
-	int r = 2*head +2;
-
-	if(l<size && tree[l]>big){big=l;}
-	if(r<size && tree[r]>big){big=r;}
-	if(big!=head){
-		int temp=tree[big];
-		tree[big]=tree[head];
-		tree[head]=temp;
-		balancedown(tree, size, big);
-	return;
+void balancedown(int tree[], int &size, int currentindex){
+	if(currentindex==size-1 || currentindex==size-2){cout<<"Ordered"<<endl;return;}
+	int lchild = (2*currentindex)+1;
+	int rchild = (2*currentindex)+2;
+	
+	if(tree[currentindex]<tree[lchild] && tree[lchild] > tree[rchild]){
+		int temp = tree[lchild];
+		tree[lchild]=tree[currentindex];
+		tree[currentindex]=temp;
+		balancedown(tree, size, lchild);
+	}
+	else if(tree[currentindex]<tree[rchild] && tree[rchild]>tree[lchild]){
+		int temp = tree[rchild];
+		tree[rchild]=tree[currentindex];
+		tree[currentindex]=temp;
+		balancedown(tree, size, rchild);
+	}
 }
 
-//void balanceup(int tree[], int &size, int head){
-	/*
-	if(currentindex=0){cout<<"Ordered"<<endl;return;}
-	int parentindex = 0;
-	if(currentindex % 2 == 0){parentindex = (currentindex-2)/2;}//index even
-	else{parentindex = (currentindex-1)/2;}//else index odd
-	//balanceup(tree, size, parentindex);
-	int temp = 0;
-	if(tree[parentindex]<tree[currentindex]){
-		temp = tree[parentindex];
-		tree[parentindex]=tree[currentindex];
-		tree[currentindex]=temp;
-		balanceup(tree, size, parentindex);
+void balanceup(int tree[], int &size, int currentindex){
+	if(currentindex==0){cout<<"Ordered"<<endl;return;}
+	int parent;
+	if(currentindex % 2 == 0){parent = (currentindex-2)/2;}
+	else{parent = (currentindex-1)/2;}
+	if(tree[parent]<tree[currentindex]){//if parent is smaller, swap
+		int temp;
+		temp = tree[currentindex];
+		tree[currentindex]=tree[parent];
+		tree[parent]=temp;
+		balanceup(tree, size, parent);
 	}
-	else{cout<<"Done"<<endl;return;}
-	*/
-	//return;
+	else{cout<<"Ordered"<<endl;return;}
 }
 
 void add(int tree[], string filename, int &size){//add function for file input
@@ -50,7 +51,7 @@ void add(int tree[], string filename, int &size){//add function for file input
 void add(int tree[], int number, int &size){//add function for manual input
 	if(size==0){tree[size]=number;size++;}
 	else{tree[size]=number;size++;}
-	//balanceup(tree, size, size);
+	balanceup(tree, size, size-1);
 }
 void rmroot(int tree[], int &size){
 	if(size==0){cout<<"Done"<<endl;return;}
@@ -61,7 +62,7 @@ void rmroot(int tree[], int &size){
 	return;
 }
 void rmall(int tree[], int &size){
-	for(int i=0;i<size;i--){
+	for(int i=0;i<size;i++){
 		rmroot(tree, size);
 	}
 }
