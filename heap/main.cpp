@@ -1,66 +1,79 @@
 #include<iostream>
 #include<fstream>
 #include<string>
+#include<array>
 using namespace std;
-void print(int tree[]){
-	cout<<tree<<endl;
+void print(int tree[], int size){
+	for(int i=0;i<size;i++){
+		cout<<tree[i]<<" ";
+	}
+	cout<<endl;
 }
-/*
-void balancedown(int tree[], int &size, int i){
-	int largest = i;//current largest index
-	int ch1 = 2*i +1;//child root calculation
-	int ch2 = 2*i +2;
+
+void balancedown(int tree[], int &size, int head){
+	int big = head;
+	int l = 2*head +1;
+	int r = 2*head +2;
+
+	if(l<size && tree[l]>big){big=l;}
+	if(r<size && tree[r]>big){big=r;}
+	if(big!=head){
+		int temp=tree[big];
+		tree[big]=tree[head];
+		tree[head]=temp;
+		balancedown(tree, size, big);
 	return;
 }
-*/
-void balanceup(int tree[], int &size, int currentindex){//SEGFAULT BEGINS HERE
+
+//void balanceup(int tree[], int &size, int head){
+	/*
 	if(currentindex=0){cout<<"Ordered"<<endl;return;}
 	int parentindex = 0;
 	if(currentindex % 2 == 0){parentindex = (currentindex-2)/2;}//index even
 	else{parentindex = (currentindex-1)/2;}//else index odd
+	//balanceup(tree, size, parentindex);
 	int temp = 0;
-<<<<<<< HEAD
-	if(tree[parentindex]<tree[currentindex]){temp = tree[parentindex];tree[parentindex]=tree[currentindex];tree[currentindex]=temp;}
-	else{return;}
-	balanceup(tree, size, parentindex);
-=======
-	if(tree[parent]<tree[index]){
-		temp = tree[parent];
-		tree[parent]=tree[index];
-		tree[index]=temp;
-		balanceup(tree, )
+	if(tree[parentindex]<tree[currentindex]){
+		temp = tree[parentindex];
+		tree[parentindex]=tree[currentindex];
+		tree[currentindex]=temp;
+		balanceup(tree, size, parentindex);
 	}
->>>>>>> 991c105 (LT3/5 TB OVERWRITTEN)
+	else{cout<<"Done"<<endl;return;}
+	*/
+	//return;
 }
+
 void add(int tree[], string filename, int &size){//add function for file input
 	return;
 }
 void add(int tree[], int number, int &size){//add function for manual input
-	int index = 0;
-	if(tree[0]!=0){while(tree[index]!=0){index++;}}
-	tree[index]=number;
-	cout<<"Number added, re-ordering..."<<endl;
-	balanceup(tree,size,index);//INDEX PASSED AS CURRENT SLOT TO MOVE UP FROM
+	if(size==0){tree[size]=number;size++;}
+	else{tree[size]=number;size++;}
+	//balanceup(tree, size, size);
 }
-int rmroot(int tree[], int &size){
+void rmroot(int tree[], int &size){
+	if(size==0){cout<<"Done"<<endl;return;}
 	tree[0]=tree[size-1];
 	tree[size-1]=0;
-	size-=1;
-	//balancedown(tree,size,0);//REBALANCES NODES
-	return 0;
+	size--;
+	balancedown(tree, size, 0);
+	return;
 }
-int rmall(int tree[]){
-	return 0;
+void rmall(int tree[], int &size){
+	for(int i=0;i<size;i--){
+		rmroot(tree, size);
+	}
 }
 int main(){
 	//'global' variables
 	int tree[100] = {};
-	int size = 100;//initial max size
+	int size = 0;//initial max size
 	for(int i=0;i<100;i++){tree[i]=0;}
 	string input = "";
 	bool working = true;
 	while(working){//main input loop
-		cout<<"Enter a command (add, remove root, remove all, print): ";
+		cout<<"Enter a command (add, remove root, remove all, print, quit): ";
 		getline(cin, input);
 		cout<<endl;
 		if(input=="add"){
@@ -89,10 +102,10 @@ int main(){
 			rmroot(tree, size);
 		}
 		else if(input=="remove all"){
-			rmall(tree);
+			rmall(tree, size);
 		}
 		else if(input=="print"){
-			print(tree);
+			print(tree, size);
 		}
 		else if(input=="quit"){working=false;}
 		else{cout<<"Invalid input, please try again."<<endl;}
