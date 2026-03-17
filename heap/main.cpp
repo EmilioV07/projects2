@@ -1,7 +1,6 @@
 #include<iostream>
 #include<fstream>
 #include<string>
-#include<array>
 using namespace std;
 void print(int tree[], int size){
 	cout<<"Size: "<<size<<endl;
@@ -15,7 +14,6 @@ void balancedown(int tree[], int &size, int currentindex){
 	if(currentindex==size-1 || currentindex==size-2){cout<<"Ordered"<<endl;return;}
 	int lchild = (2*currentindex)+1;
 	int rchild = (2*currentindex)+2;
-	
 	if(tree[currentindex]<tree[lchild] && tree[lchild] > tree[rchild]){
 		int temp = tree[lchild];
 		tree[lchild]=tree[currentindex];
@@ -62,9 +60,7 @@ void rmroot(int tree[], int &size){
 	return;
 }
 void rmall(int tree[], int &size){
-	for(int i=0;i<size;i++){
-		rmroot(tree, size);
-	}
+	while(size!=0){rmroot(tree, size);}
 }
 int main(){
 	//'global' variables
