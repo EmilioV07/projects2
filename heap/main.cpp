@@ -1,17 +1,31 @@
+/*
+Emilio Vasquez-Pettit
+3/17/2026
+This program runs a max heap where numbers (ints) can be added via manual input or file import.
+Citations:
+- Dylan Waters | Helped with "balancing" logic and ifstream syntax
+- MS Copilot | provided and explained >> operator use with .txt files & ifstream
+*/
 #include<iostream>
 #include<fstream>
 #include<string>
 using namespace std;
+void printTree(){
+	
+}
 void print(int tree[], int size){
 	cout<<"Size: "<<size<<endl;
+	cout<<"Array representation: ";
 	for(int i=0;i<size;i++){
 		cout<<tree[i]<<" ";
 	}
 	cout<<endl;
+	cout<<"Tree Representation: "<<endl;
+	
 }
 
 void balancedown(int tree[], int &size, int currentindex){
-	if(currentindex==size-1 || currentindex==size-2){cout<<"Ordered"<<endl;return;}
+	if(currentindex==size-1 || currentindex==size-2){return;}
 	int lchild = (2*currentindex)+1;
 	int rchild = (2*currentindex)+2;
 	if(tree[currentindex]<tree[lchild] && tree[lchild] > tree[rchild]){
@@ -29,7 +43,7 @@ void balancedown(int tree[], int &size, int currentindex){
 }
 
 void balanceup(int tree[], int &size, int currentindex){
-	if(currentindex==0){cout<<"Ordered"<<endl;return;}
+	if(currentindex==0){return;}
 	int parent;
 	if(currentindex % 2 == 0){parent = (currentindex-2)/2;}
 	else{parent = (currentindex-1)/2;}
@@ -40,19 +54,29 @@ void balanceup(int tree[], int &size, int currentindex){
 		tree[parent]=temp;
 		balanceup(tree, size, parent);
 	}
-	else{cout<<"Ordered"<<endl;return;}
-}
-
-void add(int tree[], string filename, int &size){//add function for file input
-	return;
+	else{return;}
 }
 void add(int tree[], int number, int &size){//add function for manual input
 	if(size==0){tree[size]=number;size++;}
 	else{tree[size]=number;size++;}
 	balanceup(tree, size, size-1);
 }
+void add(int tree[], int &size){//add function for file input
+	string fileinput;
+	cout<<"Input your file name (ex. numbers.txt, in same directory): ";
+	getline(cin, fileinput);cout<<endl;
+	ifstream file(fileinput);
+	int value;//value to be pulled
+	if(file.is_open()){
+		while(file >> value){
+			add(tree, value, size);
+		}
+	}
+	else{cout<<"Invalid file name or DNE"<<endl;return;}
+	return;
+}
 void rmroot(int tree[], int &size){
-	if(size==0){cout<<"Done"<<endl;return;}
+	if(size==0){return;}
 	tree[0]=tree[size-1];
 	tree[size-1]=0;
 	size--;
@@ -79,10 +103,7 @@ int main(){
 			getline(cin, addtype);
 			cout<<endl;
 			if(addtype=="file"){
-				string filename = "";
-				cout<<"Enter filename: ";
-				getline(cin, filename);
-				add(tree,filename,size);
+				add(tree, size);
 			}
 			else if(addtype=="input"){
 				string numstr = "";
