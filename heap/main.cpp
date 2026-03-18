@@ -10,8 +10,17 @@ Citations:
 #include<fstream>
 #include<string>
 using namespace std;
-void printTree(){
-	
+void printTree(int tree[], int lastIndex, int currIndex, int depth){
+	if((currIndex*2)+1 < lastIndex){
+		printTree(tree,lastIndex,(currIndex*2)+1,depth+1);//right recursion
+	}
+	for(int i=0;i<depth;i++){
+		cout<<"\t";//print tabs
+	}
+	cout<<tree[currIndex]<<endl;
+	if((currIndex*2)+2 < lastIndex){
+		printTree(tree,lastIndex,(currIndex*2)+2,depth+1);//right recursion
+	}
 }
 void print(int tree[], int size){
 	cout<<"Size: "<<size<<endl;
@@ -20,8 +29,8 @@ void print(int tree[], int size){
 		cout<<tree[i]<<" ";
 	}
 	cout<<endl;
-	cout<<"Tree Representation: "<<endl;
-	
+	cout<<"Tree Representation (0 is empty): "<<endl;
+	printTree(tree, size, 0, 0);
 }
 
 void balancedown(int tree[], int &size, int currentindex){
