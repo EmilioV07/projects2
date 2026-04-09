@@ -1,5 +1,5 @@
-#ifndef BTN_H
-#define BTN_H
+#ifndef BTNODE_H
+#define BTNODE_H
 struct btnode{
 	int data;
 	btnode* left;

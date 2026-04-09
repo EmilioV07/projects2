@@ -1,6 +1,6 @@
 #include"btnode.h"
-btnode::btnode(int _num, btnode* _left, btnode* _right){
-	num = _num;
+btnode::btnode(int _data, btnode* _left, btnode* _right){
+	data = _data;
 	left = _left;
 	right = _right;
 }
