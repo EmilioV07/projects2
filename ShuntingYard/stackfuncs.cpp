@@ -1,14 +1,13 @@
 #include"node.h"
 #include<iostream>
-void push(int _data, node* stackHead){//add a node to the top of the stack given "_data" (from input string)
-	node* n = new node(_data, nullptr);
+void push(node* inputNode, node* stackHead){//add a node to the top of the stack given "_data" (from input string)
 	if(stackHead!=nullptr){//if stack is not empty (call first to avoid redundant check)
-		n->next=stackHead;
-		stackHead=n;
+		inputNode->next=stackHead;
+		stackHead=inputNode;
 		return;
 	}
 	else{//if stack is empty
-		stackHead=n;
+		stackHead=inputNode;
 		return;
 	}
 }

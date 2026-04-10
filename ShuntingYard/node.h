@@ -1,8 +1,8 @@
 #ifndef NODE_H
 #define NODE_H
 struct node{
-	int data;
+	char data;
 	node* next;
-	node(int _data, node* _next);
+	node(char _data, node* _next);
 };
 #endif

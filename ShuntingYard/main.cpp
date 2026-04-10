@@ -10,11 +10,15 @@
 
 node* shunt(node* stackHead, node* qHead, node* qTail, std::string input){//shunting yard algorithm, returns queue head pointer
 	for(char c : input){
-		if(!isalpha(c)){
-			std::cout<<"push"<<std::endl;
+		if(isalpha(c)){
+			std::cout<<"Enqueue"<<std::endl;
+			node* inputNode = new node(c,nullptr);//if input is a character, move it to output queue
+			enq(inputNode, qHead);
 		}
 		else{
 			std::cout<<"enqueue"<<std::endl;
+			node* inputNode = new node(c,nullptr);//if input is an operator, move it to the operator stack
+			push(inputNode, stackHead);
 		}
 	}
 	return qHead;
