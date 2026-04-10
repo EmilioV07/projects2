@@ -8,7 +8,7 @@
 #include<string>
 #include<cctype>
 
-node* shunt(node* stackHead, node* qHead, node* qTail, std::string input){//shunting yard algorithm, returns queue head pointer
+node* shunt(node* stackHead, node* qHead, std::string input){//shunting yard algorithm, returns queue head pointer
 	for(char c : input){
 		if(isalpha(c)){
 			std::cout<<"Enqueue"<<std::endl;
@@ -24,36 +24,58 @@ node* shunt(node* stackHead, node* qHead, node* qTail, std::string input){//shun
 	return qHead;
 }
 
+node* expressionTree(node* qHead, node* root){
+
+	return root;
+}
+
+node* prefix(node* root){//use expression tree to output postfix notation
+
+	return root;
+}
+
+node* infix(node* root){//use expression tree to output postfix notation
+
+	return root;
+}
+
+node* postfix(node* root){//use expression tree to output postfix notation
+
+	return root;
+}
+
 int main(){
 	//data structure items
 	node* stackHead = nullptr;//insert and remove at head to avoid tail pointer
 	node* qHead = nullptr;//insert at head remove at end, use tail pointer.
-	//node* qTail = nullptr;//tail pointer for queue
-	//UI items
-	std::string input;//arithmetic input
-	char outOption;//output/notation preference (pre/in/postfix)
-	//shuntedExpression = shunt(stachHead, qHead, qTail, input);
+	node* root = nullptr;
+
 	bool running=true;
 	while(running){//main input loop
+		//input vars
+		std::string input;//arithmetic input
+		char outOption = ' ';//output/notation preference (pre/in/postfix/quit as 1,2,3,q)
+
+		//input collection
 		std::cout<<"Input: ";
 		std::getline(std::cin, input); std::cout<<std::endl;
 		std::cout<<"Notation (1 Pre, 2 In, 3 Post, q Quit): ";
-		//std::getline(std::cin, outOption);
 		std::cin >> outOption;
-		//std::cin.ignore(std::numeric_limits<std::streamsize>std::max(), '\n');
-		std::cin.ignore(1, '\n');
+		std::cin.ignore(1, '\n');//copilot instruction on clearing input buffer to not bug out potential later getline()s
+
+		//input decision
 		switch (outOption){
 		case '1':
 			std::cout<<std::endl<<"You have selected Prefix"<<std::endl;
-			
+			//prefix();
 			break;
 		case '2':
 			std::cout<<std::endl<<"You have selected Infix"<<std::endl;
-			
+			//infix();
 			break;
 		case '3':
 			std::cout<<std::endl<<"You have selected Postfix"<<std::endl;
-			
+			//postfix();
 			break;
 		case 'q':
 			std::cout<<std::endl<<"Quitting..."<<std::endl;
