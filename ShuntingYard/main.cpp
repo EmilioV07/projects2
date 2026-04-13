@@ -8,7 +8,15 @@
 #include<string>
 #include<cctype>
 
-int prec(char op){//returns precidence given operator, to be used in shunt()
+void print(node* curr){//curr to be input as qHead
+	if(curr!=nullptr){
+		std::cout<<curr->data<<" ";
+		print(curr->next);
+	}
+	else{return;}
+}
+
+int prec(char op){//returns precidence given operator, to be used i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n shunt()
 	if(op=='-'||op=='+'){return 1;}//addition subtraction precedence
 	else if(op=='/'||op=='*'){return 2;}//multiplication division precedence
 	else if(op=='^'){return 3;}//power precedence
@@ -20,23 +28,50 @@ int prec(char op){//returns precidence given operator, to be used in shunt()
 node* shunt(node* stackHead, node* qHead, std::string input){//shunting yard algorithm, returns queue head pointer
 	for(char c : input){
 		int pr = prec(c);//precidence of given char of iteration
-		int stackHeadpr = prec(stackHead->data);//precedence of current stackHead
-		node* n = new node(c, nullptr);//new node with current char to be pushed/enqueued
-		if(pr==0 && c!=' '){enq(n, qHead);}//1. if char is alphabetical, enqueue
-		else if(pr==4){push(n, stackHead);}//2. if char is '(', push to stack
-		else if(pr==5){//3. if char is ')', discard, enq stack items until '(', discard.
-			while(stackHead->data!='('){
-				node* p = pop(stackHead);
-				enq(p, qHead);
-			}
-			node* p = pop(stackHead);
-			delete p;//discards '('
+		//if(stackHead!=nullptr){int stackHeadpr = prec(stackHead->data);}c//precedence of current stackHead
+		//node* n = new node(c, nullptr);//new node with current char to be pushed/enqueued
+		
+		if(pr==0 && c!=' '){//1. if char is alphabetical, enqueue
+			enq(new node(c, nullptr), qHead);//decided to create new nodes individually
 		}
-		else if(pr<=3 && stackHead->data!='(' || stackHead->data==nullptr){push(n, stackHead);}//4. if char is operator & valid stack condition, push
-		else if(pr<=3 && pr>=stackHeadpr || stackHead==nullptr || stackHead=='('){push(n, stackHead);}//5. If char is operator & is higher or same prec as stackHead/stack empty or floor '(', push
-		else if(pr)//6. 
-		else{std::cout<<"Error"<<std::endl;}
+		else if(pr==4){//2. if char is '(', push to stack
+			push(new node(c, nullptr), stackHead);
+		}
+		else if(pr==5){//3. if char is ')', discard, enq stack items until '(', discard.
+			while(stackHead!=nullptr && stackHead->data!='('){
+				//node* p = pop(stackHead);
+				enq(pop(stackHead), qHead);
+			}
+			if(stackHead!=nullptr){
+				node* p = pop(stackHead);
+				delete p;//discards '('
+			}
+		}
+		else if(pr>=1 && pr<=3){//4. if char is operator & valid stack condition, push
+			while(stackHead!=nullptr && stackHead->data!='(' && prec(stackHead->data)>=pr){
+				enq(pop(stackHead), qHead);
+			}
+			push(new node(c, nullptr), stackHead);
+		}
+		//else if(pr<=3 && pr>0 && pr>=stackHeadpr || stackHead==nullptr || stackHead->data=='('){push(n, stackHead);}//5. If char is operator & is higher or same prec as stackHead/stack empty or floor '(', push
+		/*
+		else if(pr<=3 && pr>0 && pr<=stackHeadpr){//6. while incoming is operator && is lower or equal precedence to stackHead, pop until not true, then push incoming.
+			node* temp = stackHead;
+			while(pr<=3 && pr>0 && pr<=stackHeadpr){
+				temp = pop(stackHead);
+				enq(temp, qHead);
+			}
+			push(n, stackHead);//push incoming operator
+		}
+		else{std::cout<<"Error"<<std::endl; delete n;}
+		*/
 	}
+	
+	//node* temp2 = nullptr;//7. Pop and enqueue all remaining operators
+	while(stackHead!=nullptr){
+		enq(pop(stackHead), qHead);
+	}
+	print(qHead);
 	return qHead;
 }
 
@@ -56,7 +91,7 @@ node* infix(node* root){//use expression tree to output postfix notation
 }
 
 node* postfix(node* root){//use expression tree to output postfix notation
-
+	
 	return root;
 }
 
@@ -92,6 +127,7 @@ int main(){
 		case '3':
 			std::cout<<std::endl<<"You have selected Postfix"<<std::endl;
 			//postfix();
+			shunt(stackHead, qHead, input);
 			break;
 		case 'q':
 			std::cout<<std::endl<<"Quitting..."<<std::endl;
