@@ -28,9 +28,6 @@ int prec(char op){//returns precidence given operator, to be used ighp_7EeFiWPT7
 node* shunt(node*& stackHead, node*& qHead, std::string input){//shunting yard algorithm, returns queue head pointer
 	for(char c : input){
 		int pr = prec(c);//precidence of given char of iteration
-		//if(stackHead!=nullptr){int stackHeadpr = prec(stackHead->data);}c//precedence of current stackHead
-		//node* n = new node(c, nullptr);//new node with current char to be pushed/enqueued
-		
 		if(pr==0 && c!=' '){//1. if char is alphabetical, enqueue
 			enq(new node(c, nullptr), qHead);//decided to create new nodes individually
 		}
@@ -39,7 +36,6 @@ node* shunt(node*& stackHead, node*& qHead, std::string input){//shunting yard a
 		}
 		else if(pr==5){//3. if char is ')', discard, enq stack items until '(', discard.
 			while(stackHead!=nullptr && stackHead->data!='('){
-				//node* p = pop(stackHead);
 				enq(pop(stackHead), qHead);
 			}
 			if(stackHead!=nullptr){
@@ -49,27 +45,12 @@ node* shunt(node*& stackHead, node*& qHead, std::string input){//shunting yard a
 		}
 		else if(pr>=1 && pr<=3){//4. if char is operator & valid stack condition, push
 			bool isRightAssociated = (c=='^');//copilot fix for complex left-associative bug which caused improper output on all-powers test case, a manual restructure of the original code that is admittedly beyond my comprehension.
-			//int topPr = prec(stackHead->data);
-			while(stackHead!=nullptr && stackHead->data!='(' && (!isRightAssociated && prec(stackHead->data) >= pr) || (isRightAssociated && prec(stackHead->data)>pr)){
+			while(stackHead!=nullptr && stackHead->data!='(' && (((!isRightAssociated && prec(stackHead->data)>=pr) || (isRightAssociated && prec(stackHead->data)>pr)))){
 				enq(pop(stackHead), qHead);
 			}
 			push(new node(c, nullptr), stackHead);
 		}
-		//else if(pr<=3 && pr>0 && pr>=stackHeadpr || stackHead==nullptr || stackHead->data=='('){push(n, stackHead);}//5. If char is operator & is higher or same prec as stackHead/stack empty or floor '(', push
-		/*
-		else if(pr<=3 && pr>0 && pr<=stackHeadpr){//6. while incoming is operator && is lower or equal precedence to stackHead, pop until not true, then push incoming.
-			node* temp = stackHead;
-			while(pr<=3 && pr>0 && pr<=stackHeadpr){
-				temp = pop(stackHead);
-				enq(temp, qHead);
-			}
-			push(n, stackHead);//push incoming operator
-		}
-		else{std::cout<<"Error"<<std::endl; delete n;}
-		*/
 	}
-	
-	//node* temp2 = nullptr;//7. Pop and enqueue all remaining operators
 	while(stackHead!=nullptr){
 		enq(pop(stackHead), qHead);
 	}
