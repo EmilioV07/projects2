@@ -13,7 +13,7 @@ void print(node* curr){//curr to be input as qHead
 		std::cout<<curr->data<<" ";
 		print(curr->next);
 	}
-	else{return;}
+	else{std::cout<<std::endl; return;}
 }
 
 int prec(char op){//returns precidence given operator, to be used i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n shunt()
@@ -25,7 +25,7 @@ int prec(char op){//returns precidence given operator, to be used ighp_7EeFiWPT7
 	else{return 0;}//debug tool/for alphabetical chars
 }
 
-node* shunt(node* stackHead, node* qHead, std::string input){//shunting yard algorithm, returns queue head pointer
+node* shunt(node*& stackHead, node*& qHead, std::string input){//shunting yard algorithm, returns queue head pointer
 	for(char c : input){
 		int pr = prec(c);//precidence of given char of iteration
 		//if(stackHead!=nullptr){int stackHeadpr = prec(stackHead->data);}c//precedence of current stackHead
@@ -48,7 +48,9 @@ node* shunt(node* stackHead, node* qHead, std::string input){//shunting yard alg
 			}
 		}
 		else if(pr>=1 && pr<=3){//4. if char is operator & valid stack condition, push
-			while(stackHead!=nullptr && stackHead->data!='(' && prec(stackHead->data)>=pr){
+			bool isRightAssociated = (c=='^');//copilot fix for complex left-associative bug which caused improper output on all-powers test case, a manual restructure of the original code that is admittedly beyond my comprehension.
+			//int topPr = prec(stackHead->data);
+			while(stackHead!=nullptr && stackHead->data!='(' && (!isRightAssociated && prec(stackHead->data) >= pr) || (isRightAssociated && prec(stackHead->data)>pr)){
 				enq(pop(stackHead), qHead);
 			}
 			push(new node(c, nullptr), stackHead);
