@@ -8,18 +8,34 @@
 #include<string>
 #include<cctype>
 
+int prec(char op){//returns precidence given operator, to be used in shunt()
+	if(op=='-'||op=='+'){return 1;}//addition subtraction precedence
+	else if(op=='/'||op=='*'){return 2;}//multiplication division precedence
+	else if(op=='^'){return 3;}//power precedence
+	else if(op=='('){return 4;}
+	else if(op==')'){return 5;}
+	else{return 0;}//debug tool/for alphabetical chars
+}
+
 node* shunt(node* stackHead, node* qHead, std::string input){//shunting yard algorithm, returns queue head pointer
 	for(char c : input){
-		if(isalpha(c)){
-			std::cout<<"Enqueue"<<std::endl;
-			node* inputNode = new node(c,nullptr);//if input is a character, move it to output queue
-			enq(inputNode, qHead);
+		int pr = prec(c);//precidence of given char of iteration
+		int stackHeadpr = prec(stackHead->data);//precedence of current stackHead
+		node* n = new node(c, nullptr);//new node with current char to be pushed/enqueued
+		if(pr==0 && c!=' '){enq(n, qHead);}//1. if char is alphabetical, enqueue
+		else if(pr==4){push(n, stackHead);}//2. if char is '(', push to stack
+		else if(pr==5){//3. if char is ')', discard, enq stack items until '(', discard.
+			while(stackHead->data!='('){
+				node* p = pop(stackHead);
+				enq(p, qHead);
+			}
+			node* p = pop(stackHead);
+			delete p;//discards '('
 		}
-		else{
-			std::cout<<"enqueue"<<std::endl;
-			node* inputNode = new node(c,nullptr);//if input is an operator, move it to the operator stack
-			push(inputNode, stackHead);
-		}
+		else if(pr<=3 && stackHead->data!='(' || stackHead->data==nullptr){push(n, stackHead);}//4. if char is operator & valid stack condition, push
+		else if(pr<=3 && pr>=stackHeadpr || stackHead==nullptr || stackHead=='('){push(n, stackHead);}//5. If char is operator & is higher or same prec as stackHead/stack empty or floor '(', push
+		else if(pr)//6. 
+		else{std::cout<<"Error"<<std::endl;}
 	}
 	return qHead;
 }

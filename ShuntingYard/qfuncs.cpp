@@ -8,5 +8,5 @@ node* deq(node* qHead){
 	node* next = qHead->next;
 	node* curr = qHead;
 	qHead = next;
-	return curr;
+	return curr;//returns top of list, which works because we add at the bottom
 }
