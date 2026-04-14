@@ -104,26 +104,30 @@ node* shunt(node*& stackHead, node*& qHead, std::string input){//shunting yard a
 	return qHead;
 }
 
-node* expressionTree(node* qHead, node* root){//clears and recycles original queue to use for output
+node* expressionTree(node*& qHead, node*& root){//clears and recycles original queue to use for output
 	btnode* tree = new binaryTree(nullptr);//yes I know this could have been one tree in main, but I'm invested in this inefficiency (I have learned a lesson here)
 	tree.build(qHead, btstackHead);
-	//clear queue to read tree into
+	while(qHead!=nullptr){//clear queue for use in output
+		curr = qHead;
+		qHead = qHead->next;
+		delete curr;
+	}
 	return root;
 }
 
-node* prefix(node* root){//use expression tree to output postfix notation
+node* prefix(node* qHead, btnode* root){//use expression tree to output postfix notation
 
-	return root;
+	return qHead;
 }
 
-node* infix(node* root){//use expression tree to output postfix notation
+node* infix(node* qHead, btnode* root){//use expression tree to output postfix notation
 
-	return root;
+	return qHead;
 }
 
-node* postfix(node* root){//use expression tree to output postfix notation
+node* postfix(node* qHead, btnode* root){//use expression tree to output postfix notation
 	
-	return root;
+	return qHead;
 }
 
 int main(){
@@ -145,20 +149,22 @@ int main(){
 		std::cin >> outOption;
 		std::cin.ignore(1, '\n');//copilot instruction on clearing input buffer to not bug out potential later getline()s
 
+		std::string shuntedStr = shunt(stackHead, qHead, input);//SHUNT INPUT
+		btnode* tree = expressionTree(qHead,root);
+
 		//input decision
 		switch (outOption){
 		case '1':
 			std::cout<<std::endl<<"You have selected Prefix"<<std::endl;
-			//prefix();
+			prefix();
 			break;
 		case '2':
 			std::cout<<std::endl<<"You have selected Infix"<<std::endl;
-			//infix();
+			infix();
 			break;
 		case '3':
 			std::cout<<std::endl<<"You have selected Postfix"<<std::endl;
-			//postfix();
-			shunt(stackHead, qHead, input);
+			postfix();
 			break;
 		case 'q':
 			std::cout<<std::endl<<"Quitting..."<<std::endl;
