@@ -8,6 +8,11 @@
 #include<string>
 #include<cctype>
 
+struct binaryTree{
+	node* root = nullptr;
+	btnode(node* root);
+};
+
 void print(node* curr){//curr to be input as qHead
 	if(curr!=nullptr){
 		std::cout<<curr->data<<" ";
@@ -54,12 +59,13 @@ node* shunt(node*& stackHead, node*& qHead, std::string input){//shunting yard a
 	while(stackHead!=nullptr){
 		enq(pop(stackHead), qHead);
 	}
+	stackHead = nullptr;//caution cleanup for later stack use in assembling binary expression tree
 	print(qHead);
 	return qHead;
 }
 
 node* expressionTree(node* qHead, node* root){
-
+	
 	return root;
 }
 
@@ -82,7 +88,6 @@ int main(){
 	//data structure items
 	node* stackHead = nullptr;//insert and remove at head to avoid tail pointer
 	node* qHead = nullptr;//insert at head remove at end, use tail pointer.
-	node* root = nullptr;
 
 	bool running=true;
 	while(running){//main input loop
