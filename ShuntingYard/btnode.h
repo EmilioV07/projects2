@@ -4,6 +4,7 @@ struct btnode{
 	int data;
 	btnode* left;
 	btnode* right;
-	btnode(int _data, btnode* left = nullptr, btnode* right = nullptr);
+	btnode* next;
+	btnode(int _data, btnode* left = _left, btnode* right = _right, btnode* next = _next);
 };
 #endif
