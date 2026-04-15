@@ -12,4 +12,5 @@ Citations{
 	Used generally to understand new-to-me syntax
 	3. https://en.wikipedia.org/wiki/Binary_expression_tree
 	Explanation and definition of binary expression trees
+	4. Nick Helbling
 }
