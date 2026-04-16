@@ -61,6 +61,20 @@ struct binaryTree{
 		root = btstackHead;
 		//return nullptr;
 	}
+
+	void printTree(btnode* root, int depth = 0) {//COPILOT EXCERPT FOR DEBUG, NOT NECESSARY
+    if (root == nullptr) return;
+
+    printTree(root->right, depth + 1);
+
+    for (int i = 0; i < depth; i++)
+        std::cout << "    ";
+
+    std::cout << root->data << "\n";
+
+    printTree(root->left, depth + 1);
+    }
+
 	~binaryTree(){return;}//destructor
 };
 
@@ -102,13 +116,14 @@ node* shunt(node*& stackHead, node*& qHead, std::string input){//shunting yard a
 		enq(pop(stackHead), qHead);
 	}
 	stackHead = nullptr;//caution cleanup for later stack use in assembling binary expression tree
-	print(qHead);
+	//print(qHead);
 	return qHead;
 }
 
 btnode* expressionTree(node*& qHead, btnode*& btstackHead){//clears and recycles original queue to use for output
 	binaryTree* tree = new binaryTree(nullptr);//yes I know this could have been one tree in main, but I'm invested in this inefficiency (I have learned a lesson here)
 	tree->buildTree(qHead, btstackHead);
+	tree->printTree(tree->root,0);
 	node* qclearE = qHead;
 	while(qHead!=nullptr){//clear queue for use in output
 		qclearE = qHead;
@@ -151,13 +166,13 @@ int main(){
 		std::cout<<"Notation (1 Pre, 2 In, 3 Post, q Quit): ";
 		std::cin >> outOption;
 		std::cin.ignore(1, '\n');//copilot instruction on clearing input buffer to not bug out potential later getline()s
+		std::cout<<std::endl;
 
 		node* shuntedStr = shunt(stackHead, qHead, input);//SHUNT INPUT
-		std::cout<<"Shunted Expression: ";
+		std::cout<<"Shunted Expression (postfix): ";
 		print(qHead); std::cout<<std::endl;
+		std::cout<<"Expression Tree: "<<std::endl<<std::endl;
 		btnode* root = expressionTree(qHead,btstackHead);
-		std::cout<<"Expression Tree: ";
-		std::cout<<std::endl;
 
 		//input decision
 		switch (outOption){
@@ -170,7 +185,7 @@ int main(){
 			infix(qHead, root);
 			break;
 		case '3':
-			std::cout<<std::endl<<"You have selected Postfix"<<std::endl;
+			std::cout<<std::endl<<"You have selected Postfix"<<std::endl<<std::endl;
 			postfix(qHead, root);
 			break;
 		case 'q':{

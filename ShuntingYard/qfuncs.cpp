@@ -3,12 +3,12 @@
 void enq(node* inputNode, node*& curr){//input as (node to enqueue, qHead)
 	if(curr==nullptr){
 		curr=inputNode;
-		std::cout<<"Added "<<inputNode->data<<std::endl;
+		//std::cout<<"Added "<<inputNode->data<<std::endl;
 		return;
 	}
 	else if(curr->next==nullptr){
 		curr->next=inputNode;
-		std::cout<<"Added "<<inputNode->data<<std::endl;
+		//std::cout<<"Added "<<inputNode->data<<std::endl;
 		//enq(inputNode, curr->next);
 	}
 	else{enq(inputNode, curr->next);}

@@ -10,6 +10,7 @@ Citations{
 	Summary of rules regarding shunting yard algorithm
 	2. MS Copilot
 	Used generally to understand new-to-me syntax
+	Used to generate a print function for the expression tree. I decided to leave it in because the printing is not required in the assignment, and it's nice to have (hence I am not graded on AI content).
 	3. https://en.wikipedia.org/wiki/Binary_expression_tree
 	Explanation and definition of binary expression trees
 }
