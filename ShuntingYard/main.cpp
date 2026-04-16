@@ -133,19 +133,25 @@ btnode* expressionTree(node*& qHead, btnode*& btstackHead){//clears and recycles
 	return tree->root;
 }
 
-node* prefix(node*& qHead, btnode*& root){//use expression tree to output postfix notation
-
-	return qHead;
+void prefix(btnode*& root){//use expression tree to output postfix notation
+	std::cout<<root->data;
+	if(root->left!=nullptr){prefix(root->left);}
+	if(root->right!=nullptr){prefix(root->right);}
+	return;
 }
 
-node* infix(node*& qHead, btnode*& root){//use expression tree to output postfix notation
-
-	return qHead;
+void postfix(btnode*& root){//use expression tree to output postfix notation
+	if(root->left!=nullptr){prefix(root->left);}
+	if(root->right!=nullptr){prefix(root->right);}
+	std::cout<<root->data;
+	return;
 }
 
-node* postfix(node*& qHead, btnode*& root){//use expression tree to output postfix notation
-	
-	return qHead;
+void infix(btnode*& root){//use expression tree to output postfix notation
+	if(root->left!=nullptr){prefix(root->left);}
+	std::cout<<root->data;
+	if(root->right!=nullptr){prefix(root->right);}
+	return;
 }
 
 int main(){
@@ -177,16 +183,19 @@ int main(){
 		//input decision
 		switch (outOption){
 		case '1':
-			std::cout<<std::endl<<"You have selected Prefix"<<std::endl;
-			prefix(qHead, root);
+			std::cout<<std::endl<<"You have selected Prefix"<<std::endl<<std::endl;
+			prefix(root);
+			std::cout<<std::endl<<std::endl;
 			break;
 		case '2':
-			std::cout<<std::endl<<"You have selected Infix"<<std::endl;
-			infix(qHead, root);
+			std::cout<<std::endl<<"You have selected Infix"<<std::endl<<std::endl;
+			infix(root);
+			std::cout<<std::endl<<std::endl;
 			break;
 		case '3':
 			std::cout<<std::endl<<"You have selected Postfix"<<std::endl<<std::endl;
-			postfix(qHead, root);
+			postfix(root);
+			std::cout<<std::endl<<std::endl;
 			break;
 		case 'q':{
 				std::cout<<std::endl<<"Quitting..."<<std::endl;
