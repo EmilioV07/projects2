@@ -6,6 +6,7 @@ struct node{
 	node* right;
 	char data;
 	node(char data, node* prev, node* left, node* right);
+	~node(){delete left; delete right;}//node deletes its children on destruction, makes clearing tree simpler, REMEMBER TO CLEAN BEFORE DELETING DURING RUNTIME
 };
 
 struct tree{
@@ -28,8 +29,8 @@ struct tree{
 	//wrappers
 	void print(){print(root);}
 
-	~tree(){//clears tree
-		return;
+	~tree(node* root){//clears tree
+		delete root;//deletes root node, which sets off chain reaction to clear tree
 	}
 };
 
