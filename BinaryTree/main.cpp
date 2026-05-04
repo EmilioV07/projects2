@@ -1,11 +1,14 @@
 #include<iostream>
+#include<string>
+#include<vector>
+#include<limits>
 
 struct node{
 	node* prev;
 	node* left;
 	node* right;
-	char data;
-	node(char data, node* prev, node* left, node* right);
+	int data;
+	node(int data, node* prev, node* left, node* right);
 	~node(){delete left; delete right;}//node deletes its children on destruction, makes clearing tree simpler, REMEMBER TO CLEAN BEFORE DELETING DURING RUNTIME
 };
 
@@ -20,23 +23,44 @@ struct tree{
 		std::cout<<root->data<<'\n';//depth-based tab spacing
 		print(root->left, depth + 1);
 		}
-	}
 
-	void add(node* _inputNode){
-		
+	void add(node* root){
+		//vars
+		std::string inputs;
+		std::string inputTemp;
+		//grap input
+		std::cout<<"Enter a series of numbers (space seperated): ";
+		std::getline(std::cin, inputs); std::cout<<std::endl;
+		//sort input
+		for(char c : inputs){
+			if(c!=' '){inputTemp += c;}
+			else{//once first space is encountered, a whole number has been formed, so make a node with it and add it to the tree
+				int numInput = stoi(inputTemp);//convert to int for easier comparison later
+				inputTemp.clear();//clear the string for the next input to pile up
+				node* n = new node(numInput,nullptr,nullptr,nullptr);//make new node with piece
+				if(root==nullptr){root=n;}//if no root, make it root
+				else{//if there is root, sort
+					node* curr = root;
+					while(curr!=nullptr){
+						if(n->data == curr->data){delete n; std::cout<<"Duplicate removed"<<std::endl;}
+						else if(n->data < curr->data){curr = curr->left;}
+						else if(n->data > curr->data){curr = curr->right;}
+					}
+					curr = n;//once the sorting has reached the bottom in the right spot, assign new node
+				}
+			}
+		}
 	}
 
 	//wrappers
 	void print(){print(root);}
-
-	~tree(node* root){//clears tree
-		delete root;//deletes root node, which sets off chain reaction to clear tree
-	}
+	void add(){add(root);}
+	~tree(){delete root;}
 };
 
 int main(){
 	bool running = true;
-	tree* tree = new tree(nullptr);//initialize tree
+	tree* binTree = new tree(nullptr);//initialize tree
 	
 	while(running){
 		char input = ' ';
@@ -61,7 +85,7 @@ int main(){
                 return 0;
             }
         default:
-            std::cout<<std::endl<<"Invalid option, try again"<<st>
+            std::cout<<std::endl<<"Invalid option, try again"<<std::endl;
         }
 	}
 }
