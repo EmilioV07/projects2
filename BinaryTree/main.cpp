@@ -3,16 +3,17 @@
 #include<vector>
 #include<limits>
 
-struct node{
-	node* prev;
-	node* left;
-	node* right;
-	int data;
-	node(int data, node* prev, node* left, node* right);
-	~node(){delete left; delete right;}//node deletes its children on destruction, makes clearing tree simpler, REMEMBER TO CLEAN BEFORE DELETING DURING RUNTIME
-};
-
 struct tree{
+
+	struct node{//node stuff
+		node* prev;
+		node* left;
+		node* right;
+		int data;
+		node(int data, node* prev = nullptr, node* left = nullptr, node* right = nullptr) : data(data), prev(prev), left(left), right(right) {}//inline constructor defaults to no neighbors/linked nodes
+		~node(){delete left; delete right;}//node deletes its children on destruction, makes clearing tree simpler, REMEMBER TO CLEAN BEFORE DELETING DURING RUNTIME
+	};
+
 	node* root;
 	tree(node* _root) : root(_root) {}
 
@@ -20,15 +21,15 @@ struct tree{
 		if(root==nullptr){return;}//return if tree is empty
 		print(root->right, depth+1);//otherwise (else), recursively increase (find) depth
 		for(int i=0; i<depth; i++){std::cout<<"    ";}//depth spacing
-		std::cout<<root->data<<'\n';//depth-based tab spacing
-		print(root->left, depth + 1);
+			std::cout<<root->data<<'\n';//depth-based tab spacing
+			print(root->left, depth + 1);
 		}
 
 	void add(node* root){
 		//vars
 		std::string inputs;
 		std::string inputTemp;
-		//grap input
+		//grab input
 		std::cout<<"Enter a series of numbers (space seperated): ";
 		std::getline(std::cin, inputs); std::cout<<std::endl;
 		//sort input
@@ -47,6 +48,7 @@ struct tree{
 						else if(n->data > curr->data){curr = curr->right;}
 					}
 					curr = n;//once the sorting has reached the bottom in the right spot, assign new node
+					std::cout<<"Node added"<<std::endl;
 				}
 			}
 		}
@@ -65,7 +67,7 @@ int main(){
 	while(running){
 		char input = ' ';
 		//input cycle
-		std::cout<<"Input (1 ADD, 2 DELETE ROOT, 3, Q QUIT): ";
+		std::cout<<"Input (1 ADD, 2 DELETE ROOT, 3 PRINT, Q QUIT): ";
 		std::cin>>input; std::cout<<std::endl;//grab instruction
 		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');//set cin \n ignore for later getline(s)
 		
@@ -73,12 +75,14 @@ int main(){
         switch (input){
         case '1':
             std::cout<<std::endl;
+            binTree->add();
             break;
         case '2':
             std::cout<<std::endl;
             break;
         case '3':
             std::cout<<std::endl;
+            binTree->print();
             break;
         case 'Q':{
                 //exit program ADD DELETION/CLEANUP IF root!=nullptr
