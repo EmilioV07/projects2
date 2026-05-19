@@ -11,13 +11,13 @@ struct tree{
 		node* right;
 		int data;
 		node(int data, node* prev = nullptr, node* left = nullptr, node* right = nullptr) : data(data), prev(prev), left(left), right(right) {}//inline constructor defaults to no neighbors/linked nodes
-		~node(){delete left; delete right;}//node deletes its children on destruction, makes clearing tree simpler, REMEMBER TO CLEAN BEFORE DELETING DURING RUNTIME
+		~node(){std::cout<<"deleted node"<<std::endl; delete left; delete right;}//node deletes its children on destruction, makes clearing tree simpler, REMEMBER TO CLEAN BEFORE DELETING DURING RUNTIME
 	};
 
 	node* root;
 	tree(node* _root) : root(_root) {}
 
-	void print(node* root, int depth = 0){//print tree sideways with tab spacing
+	void print(node*& root, int depth = 0){//print tree sideways with tab spacing
 		if(root==nullptr){return;}//return if tree is empty
 		print(root->right, depth+1);//otherwise (else), recursively increase (find) depth
 		for(int i=0; i<depth; i++){std::cout<<"    ";}//depth spacing
@@ -25,7 +25,18 @@ struct tree{
 			print(root->left, depth + 1);
 		}
 
-	void add(node* root){
+	void insert(node*& root, node*& prev, int numInput){
+		if(root == nullptr){//base case, once "root" is nullptr, add the node, and if this is not the first node, update the previous pointer.
+			root = new node(numInput,nullptr,nullptr,nullptr);
+			if(prev!=nullptr){root->prev = prev;}
+			return;
+		}
+		else if(numInput < root->data){insert(root->left, root, numInput);}//continues insertion recursion with the next subtree, previous, and input.
+		else if(numInput > root->data){insert(root->right, root, numInput);}
+		else{std::cout<<"Ignored Duplicate"<<std::endl;}
+	}
+
+	void add(node*& root){
 		//vars
 		std::string inputs;
 		std::string inputTemp;
@@ -34,26 +45,35 @@ struct tree{
 		std::getline(std::cin, inputs); std::cout<<std::endl;
 		//sort input
 		for(char c : inputs){
-			if(c!=' '){inputTemp += c;}
-			else{//once first space is encountered, a whole number has been formed, so make a node with it and add it to the tree
+			if(c!=' '){
+				inputTemp += c;
 				int numInput = stoi(inputTemp);//convert to int for easier comparison later
 				inputTemp.clear();//clear the string for the next input to pile up
-				node* n = new node(numInput,nullptr,nullptr,nullptr);//make new node with piece
-				if(root==nullptr){root=n;}//if no root, make it root
-				else{//if there is root, sort
-					node* curr = root;
-					while(curr!=nullptr){
-						if(n->data == curr->data){delete n; std::cout<<"Duplicate removed"<<std::endl;}
-						else if(n->data < curr->data){curr = curr->left;}
-						else if(n->data > curr->data){curr = curr->right;}
-					}
-					curr = n;//once the sorting has reached the bottom in the right spot, assign new node
-					std::cout<<"Node added"<<std::endl;
+				insert(root, root, numInput);
 				}
 			}
-		}
+				/*
+				node* n = new node(numInput,nullptr,nullptr,nullptr);//make new node with piece
+				node*& curr = root;
+				node* prev = nullptr;
+				bool sorting = true;
+				while(sorting){
+					if(curr == nullptr){
+						curr = n;
+						sorting = false;
+					}
+					else if(n->data == curr->data){
+						delete n;
+						std::cout<<"Duplicate removed"<<std::endl;
+						sorting = false;
+					}
+					else if(n->data < curr->data){curr = curr->left;}
+					else{curr = curr->right;}
+				}
+				curr = n;//once the sorting has reached the bottom in the right spot, assign new node
+				std::cout<<"Node added"<<std::endl;
+				*/
 	}
-
 	//wrappers
 	void print(){print(root);}
 	void add(){add(root);}
@@ -86,6 +106,7 @@ int main(){
             break;
         case 'Q':{
                 //exit program ADD DELETION/CLEANUP IF root!=nullptr
+                delete binTree;
                 return 0;
             }
         default:
