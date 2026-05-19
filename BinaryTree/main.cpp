@@ -25,14 +25,14 @@ struct tree{
 			print(root->left, depth + 1);
 		}
 
-	void insert(node*& root, node*& prev, int numInput){
-		if(root == nullptr){//base case, once "root" is nullptr, add the node, and if this is not the first node, update the previous pointer.
-			root = new node(numInput,nullptr,nullptr,nullptr);
-			if(prev!=nullptr){root->prev = prev;}
+	void insert(node*& curr, node*& prev, int numInput){
+		if(curr == nullptr){//base case, once "root" is nullptr, add the node, and if this is not the first node, update the previous pointer.
+			curr = new node(numInput,nullptr,nullptr,nullptr);
+			if(prev!=nullptr){curr->prev = prev;}
 			return;
 		}
-		else if(numInput < root->data){insert(root->left, root, numInput);}//continues insertion recursion with the next subtree, previous, and input.
-		else if(numInput > root->data){insert(root->right, root, numInput);}
+		else if(numInput < curr->data){insert(curr->left, curr, numInput);}//continues insertion recursion with the next subtree, previous, and input.
+		else if(numInput > curr->data){insert(curr->right, curr, numInput);}
 		else{std::cout<<"Ignored Duplicate"<<std::endl;}
 	}
 
@@ -74,9 +74,29 @@ struct tree{
 				std::cout<<"Node added"<<std::endl;
 				*/
 	}
+
+	bool find(node*& curr, int target){//curr to be input as root
+		if(curr == nullptr){return false;}
+		if(curr->data == target){return true;}
+		else if(target < curr->data){return find(curr->left, target);}
+		else{return find(curr->right, target);}//if target is larger, right subtree
+	}
+
+	void search(node*& root){
+		std::string target;
+		std::cout<<"Enter a number to search for: ";
+		std::getline(std::cin, target);
+		int _target = stoi(target);
+		bool found = find(root, _target);
+		if(found){std::cout<<"Target found in the tree"<<std::endl;}
+		else{std::cout<<"Target not found in the tree"<<std::endl;}
+	}
+
+	
 	//wrappers
 	void print(){print(root);}
 	void add(){add(root);}
+	void search(){search(root);}
 	~tree(){delete root;}
 };
 
@@ -104,6 +124,10 @@ int main(){
             std::cout<<std::endl;
             binTree->print();
             break;
+        case '4':
+			std::cout<<std::endl;
+			binTree->search();
+        	break;
         case 'Q':{
                 //exit program ADD DELETION/CLEANUP IF root!=nullptr
                 delete binTree;
