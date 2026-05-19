@@ -1,3 +1,4 @@
+#include<sstream>
 #include<iostream>
 #include<string>
 #include<vector>
@@ -37,42 +38,22 @@ struct tree{
 	}
 
 	void add(node*& root){
-		//vars
 		std::string inputs;
 		std::string inputTemp;
-		//grab input
 		std::cout<<"Enter a series of numbers (space seperated): ";
-		std::getline(std::cin, inputs); std::cout<<std::endl;
-		//sort input
-		for(char c : inputs){
-			if(c!=' '){
-				inputTemp += c;
-				int numInput = stoi(inputTemp);//convert to int for easier comparison later
-				inputTemp.clear();//clear the string for the next input to pile up
+		std::getline(std::cin, inputs); std::cout<<std::endl;//grab input
+		for(char c : inputs){//split and add to tree
+			if(c!=' '){inputTemp += c;}//walk characters and add non spaces
+			else{//once space is encountered, add formed number to tree, clear, and continue iterating
+				int numInput = stoi(inputTemp);
+				inputTemp.clear();
 				insert(root, root, numInput);
-				}
 			}
-				/*
-				node* n = new node(numInput,nullptr,nullptr,nullptr);//make new node with piece
-				node*& curr = root;
-				node* prev = nullptr;
-				bool sorting = true;
-				while(sorting){
-					if(curr == nullptr){
-						curr = n;
-						sorting = false;
-					}
-					else if(n->data == curr->data){
-						delete n;
-						std::cout<<"Duplicate removed"<<std::endl;
-						sorting = false;
-					}
-					else if(n->data < curr->data){curr = curr->left;}
-					else{curr = curr->right;}
-				}
-				curr = n;//once the sorting has reached the bottom in the right spot, assign new node
-				std::cout<<"Node added"<<std::endl;
-				*/
+		}
+		if(!inputTemp.empty()){//fix for bug where single and last numbers were not added (due to only adding when space is incountered)
+			int numInput = stoi(inputTemp);
+			insert(root, root, numInput);
+		}
 	}
 
 	bool find(node*& curr, int target){//curr to be input as root
