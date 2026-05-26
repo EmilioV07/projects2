@@ -1,13 +1,12 @@
 Emilio Vasquez-Pettit
 This program
 
-Citations{
+Citations
 	1. MS Copilot
 
-	Explaining new-to-me syntax
+	Explaining new-to-me syntax (switches and such)
 
-	Reccomendaiton to give nodes "ownership" of their children, allowing
+	Practice of giving nodes "ownership" of their children, allowing
 	nodes to delete each-other for tree destruction
 
-	2. 
-}
+	Logical debug (check order) of deletion priority
