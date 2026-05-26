@@ -76,42 +76,74 @@ struct tree{
 		else{std::cout<<"Target not found in the tree"<<std::endl;}
 	}
 
-	node* findPredecessor(node*& curr, node* pred){//helper function for del(), finds predecessor for root, curr to be input as root->right
-		if(curr == nullptr){return pred;}//no items
-		/*
-		else if(curr->right != nullptr && curr->right->data < curr->data){//if nullptr, cuts before data check
-			pred = curr->right;
+	node* findPred(node* root, node* targetNode){
+		if(targetNode->left != nullptr){//left subtree exists case
+			node* pred = targetNode->left;
+			while(pred->right != nullptr){
+				pred=pred->right;
+			}
+			return pred;
 		}
-		else{
-			findPredecessor(curr->right, pred);
-			findPredecessor(curr->left, pred);
+		node* pred = nullptr;//right subtree only case
+		node* curr = root;
+		while(curr != targetNode){
+			if(targetNode->data > curr->data){pred = curr; curr = curr->right;}
+			else{curr=curr->left;}
 		}
-		*/
-		return nullptr;
+		return pred;
 	}
 
-	void del(node*& targetNode){//use find helper funciton as in search to locate target node, fixed to return the found node to be passed
-		if(targetNode == nullptr){return;}
-		if(targetNode->left == nullptr && targetNode->right == nullptr){delete targetNode;}//no child deletion condition
-		else if((targetNode->left == nullptr) XOR (targetNode->right == nullptr)){//one child deletion condition
-			if(targetNode->left != nullptr){
-				targetNode->left->prev = targetNode->prev;
-				if(targetNode->prev!=nullptr){targetNode->prev->left = targetNode->left;}
-				targetNode->left = nullptr;
+	void del(node*& root, node*& targetNode){//curr to be input as root
+		if(targetNode == nullptr){std::cout<<"No items in tree"<<std::endl; return;}
+
+		node* parent = targetNode->prev;
+		//two child
+		if(targetNode->left != nullptr && targetNode->right != nullptr){
+			node* pred = findPred(root, targetNode);//establish predecessor
+			targetNode->data = pred->data;//copy predecessor to target node to avoid node wrangling
+			del(root,pred);//call del on predecessor and let 0 or 1 child cases handle it
+			return;
+		}
+		//one child
+		if(targetNode->left != nullptr || targetNode->right != nullptr){
+			node* child = targetNode->left ? targetNode->left : targetNode->right;//copilot simplification for determining if child is left or right for simpler later logic
+
+			targetNode->left = nullptr;//disconnect node to avoid chain reaction deletion, works after child is established
+			targetNode->right = nullptr;
+
+			if(parent==nullptr){//root condition
+				root = child;
+				child->prev = nullptr;
 				delete targetNode;
+				std::cout<<"Target deleted"<<std::endl;
+				return;
+			}
+			//normal conditions
+			if(parent->left == targetNode){parent->left = child;}
+			else{parent->right = child;}
+
+			child->prev = parent;
+			delete targetNode;
+			std::cout<<"Target deleted"<<std::endl;
+			return;//node is effectively bypassed
+		}
+		//leaf
+		else{//clear parent to leaf pointer to avoid memory leak and delete the target node
+			if(parent == nullptr){//root case
+				root = nullptr;
+				delete targetNode;
+				return;
+			}
+			if(parent->left == targetNode){
+				parent->left = nullptr;
+				delete targetNode;
+				std::cout<<"Target deleted"<<std::endl;
 			}
 			else{
-				targetNode->right->prev = targetNode->prev;
-				if(targetNode->prev!=nullptr){targetNode->prev->right = targetNode->right;}
-				targetNode->right = nullptr;
+				parent->right = nullptr;
 				delete targetNode;
-				targetNode = nullptr;
+				std::cout<<"Target deleted"<<std::endl;
 			}
-		}
-		else{//two child deletion condition
-			node* pred = findPredecessor(root->right, nullptr);//should return predecessor or nullptr if there is none
-			targetNode->data = pred->data;//copy predecessor data to target node
-			del(pred);//delete predecessor node after copy is complete
 		}
 	}
 
@@ -119,7 +151,7 @@ struct tree{
 	void print(){print(root);}
 	void add(){add(root);}
 	void search(){search(root);}
-	void del(){del(root);}
+	//void del(){del(root);}
 	~tree(){delete root;}
 };
 
@@ -148,7 +180,7 @@ int main(){
 			std::getline(std::cin, tIstring); std::cout<<std::endl;
 			targetInt = stoi(tIstring);//target chosen, ready to find
 			tree::node* targetNode = binTree->find(binTree->root, targetInt);//target recieved, ready for manipulation
-			binTree->del(targetNode);
+			binTree->del(binTree->root, targetNode);
             break;
         }
         case '3':
