@@ -40,7 +40,7 @@ struct tree{
 	void add(node*& root){
 		std::string inputs;
 		std::string inputTemp;
-		std::cout<<"Enter a series of numbers (space seperated): ";
+		std::cout<<"Enter a series of numbers (space seperated, 1-100): ";
 		std::getline(std::cin, inputs); std::cout<<std::endl;//grab input
 		for(char c : inputs){//split and add to tree
 			if(c!=' '){inputTemp += c;}//walk characters and add non spaces
