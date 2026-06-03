@@ -11,4 +11,4 @@ Citations:
 	relevant documentation on vectors and related iterators. Also used
 	to explain what a graph was in the context of this project (what an
 	adjacency table was, what a matrix is, what format vertices shuold look
-	like, etc...).
+	like, etc...). Explained Dijkstra's algorithm and walked through elements.
