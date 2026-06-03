@@ -2,18 +2,9 @@
 #include<string>
 #include<limits>
 #include<vector>
+#include<algorithm>
 
 struct graph{
-
-	/*Undesireable structure
-	struct vert(){//vertex struct for adding later on
-		string label;//store vertex label
-		int x, y;//store vertex location on the graph
-		//bool visited//could be useful for traversal later on
-	};
-	*/
-
-	int vertCount = 0;//keep track of vertices, so far redundant, keeping just in case
 
 	std::vector<std::string> labels;//stores label for each vertex
 	std::vector<std::vector<std::pair<int,int>>> adj;//adjacency list. vector of vectors of int pairs used to store edges and weight of said edges (edge-neighbor, weight)
@@ -35,17 +26,17 @@ struct graph{
 		int start;
 		int end;
 
-		std::cout<<"Enter a vertex index to add an edge to: ";//grab start vertex
-		std::getline(std::cin, startstr);
-		start = stoi(startstr);
-		std::cout<<std::endl;
-		if(start<0 || start >= vertCount){std::cout<<"Invalid input, please try again."<<std::endl; return;}
+		std::cout<<"Enter vertex to start edge from: ";//grab start vertex
+		std::getline(std::cin, startstr);//grab input
+		auto startIndex = std::find(labels.begin(), labels.end(), startstr);//find the correct index to add to by label index (linear search to find it, not a huge efficiency problem considering there are no more than 20 vertices)
+		if(startIndex == labels.end()){std::cout<<"The vertex you input does not exist, please try again."<<std::endl; return;}//if vertex is not found
+		start = startIndex - labels.begin();//convert to index
 
-		std::cout<<"Enter a destination vertex: ";//grab destination vertex
+		std::cout<<"Enter destination vertex: ";//grab destination vertex
 		std::getline(std::cin, endstr);
-		end = stoi(endstr);
-		std::cout<<std::endl;
-		if(end<0 || end >= vertCount){std::cout<<"Invalid input, please try again."<<std::endl; return;}
+		auto endIndex = std::find(labels.begin(), labels.end(), endstr);
+		if(endIndex == labels.end()){std::cout<<"The vertex you input does not exist, please try again."<<std::endl; return;}//if vertex is not found
+		end = endIndex - labels.begin();
 
 		std::cout<<"Enter edge weight: ";//grab desired edge weight
 		std::getline(std::cin, weightstr);
